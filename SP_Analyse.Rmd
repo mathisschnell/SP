@@ -1,0 +1,257 @@
+---
+title: "SP Analyse"
+author: "Mathis Schnell"
+date: "25 1 2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+Bitte nicht verbreitens
+
+bibliography: references.bib
+```{r setup, include=FALSE}
+# Vorbereitungen
+set.seed(123)
+rm(list = ls())
+library(haven)
+library(dplyr)
+library(tidyverse)
+library(foreign)
+library(readstata13)
+library(kableExtra)
+```
+
+# Einsichten Nationalratswahlen 2015/2019
+
+### Die zwei wichtigsten politischen Probleme - und wer ist am Kompetenztesten?
+
+(data: Selects 2019 - please do not share...)
+
+# Wechsewähler: Von Rot/Grün (2015) nach GLP (2019)
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+
+data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
+
+data %>% 
+  filter(canton_sample == "BE" | canton_sample == "AG") %>% 
+  filter(f10300rec == "SP/PS - Social Democratic Party" | f10300rec == "GPS/PES - Green Party" | f10300rec == "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari") %>%  # SP, Grüne, PDA
+  filter(f11800rec == "GLP/PVL - Green Liberal Party") %>%
+  select(f12700c, f12720rec,f12730c, f12740rec) %>%
+  mutate_all(linebreak) %>%
+  mutate(f12720rec=recode(f12720rec, 
+                         "SP/PS - Social Democratic Party"="SP/PS",
+                         "GPS/PES - Green Party"="GPS/Vertes",
+                    "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari" = "PDA,...",
+                    "BDP/PBD - Conservative Democratic Party" = "BDP/PBD",
+                    "GLP/PVL - Green Liberal Party" = "GLP/PVL",
+                 "CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
+                    "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
+                    "EVP/PEV - Evangelical People’s Party" = "EVP/PEV"))%>%
+    mutate(f12740rec=recode(f12740rec,
+                         "SP/PS - Social Democratic Party"="SP/PS",
+                         "GPS/PES - Green Party"="GPS/Vertes",
+                    "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari" = "PDA,...",
+                    "BDP/PBD - Conservative Democratic Party" = "BDP/PBD",
+                    "GLP/PVL - Green Liberal Party" = "GLP/PVL",
+                    "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
+                    	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
+                    "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
+  kbl(col.names = c("MIP 1", "Kompetenzz 1", "MIP 2", "Kompetenz 2")) %>%
+  kable_styling(full_width = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
+  kable_styling(bootstrap_options = "striped", full_width = T)%>%
+  kable_styling(bootstrap_options = "striped", font_size = 11)
+
+```
+
+# "Abspinger": 2015 Rot/Grün, 2019 keine Partizipation
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+
+data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
+
+data %>% 
+  filter(canton_sample == "BE" | canton_sample == "AG") %>% 
+  filter(f10300rec == "SP/PS - Social Democratic Party" | f10300rec == "GPS/PES - Green Party" | f10300rec == "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari") %>%  # SP, Grüne, PDA
+  filter(f11100 == "Did not vote" | f11100 == "Thought about voting but did not vote"  | f11100 == "Usually votes, but not this time")   %>%
+    select(f12700c, f12720rec,f12730c, f12740rec) %>%
+    mutate(f12720rec=recode(f12720rec, 
+                         "SP/PS - Social Democratic Party"="SP/PS",
+                         "GPS/PES - Green Party"="GPS/Vertes",
+                    "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari" = "PDA,...",
+                    "BDP/PBD - Conservative Democratic Party" = "BDP/PBD",
+                    "GLP/PVL - Green Liberal Party" = "GLP/PVL",
+                    "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
+                   	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
+                    "EVP/PEV - Evangelical People’s Party" = "EVP/PEV"))%>%
+    mutate(f12740rec=recode(f12740rec, 
+                         "SP/PS - Social Democratic Party"="SP/PS",
+                         "GPS/PES - Green Party"="GPS/Vertes",
+                    "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari" = "PDA,...",
+                    "BDP/PBD - Conservative Democratic Party" = "BDP/PBD",
+                    "GLP/PVL - Green Liberal Party" = "GLP/PVL",
+                                       	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
+
+                    "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
+                    "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
+  mutate_all(linebreak) %>%
+  kbl(col.names = c("MIP 1", "Kompetenzt 1", "MIP 2", "Kompetenz 2")) %>%
+  kable_styling(full_width = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
+  kable_styling(bootstrap_options = "striped", full_width = T)%>%
+  kable_styling(bootstrap_options = "striped", font_size = 11)
+
+```
+
+# Sympaisanten: 2019 keine Partizipation, jedoch ideologische Nähe zu Rot/Gruen
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
+
+data %>% 
+  filter(canton_sample == "BE" | canton_sample == "AG") %>% 
+  filter(f11100 == "Did not vote" | f11100 == "Thought about voting but did not vote"  | f11100 == "Usually votes, but not this time") %>%
+  filter(f14010rec == "SP/PS - Social Democratic Party" | f14010rec == "GPS/PES - Green Party" | f14010rec == "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari")  %>%
+  select(f12700c, f12720rec,f12730c, f12740rec)  %>%
+      mutate(f12720rec=recode(f12720rec, 
+                         "SP/PS - Social Democratic Party"="SP/PS",
+                         "GPS/PES - Green Party"="GPS/Vertes",
+                    "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari" = "PDA,...",
+                    "BDP/PBD - Conservative Democratic Party" = "BDP/PBD",
+                    "GLP/PVL - Green Liberal Party" = "GLP/PVL",
+                    "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
+                   	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
+                    "EVP/PEV - Evangelical People’s Party" = "EVP/PEV"))%>%
+    mutate(f12740rec=recode(f12740rec, 
+                         "SP/PS - Social Democratic Party"="SP/PS",
+                         "GPS/PES - Green Party"="GPS/Vertes",
+                    "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari" = "PDA,...",
+                    "BDP/PBD - Conservative Democratic Party" = "BDP/PBD",
+                    "GLP/PVL - Green Liberal Party" = "GLP/PVL",
+                                       	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
+
+                    "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
+                    "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
+  mutate_all(linebreak) %>%
+  kbl(col.names = c("MIP 1", "Kompetenzt 1", "MIP 2", "Kompetenz 2")) %>%
+  kable_styling(full_width = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
+  kable_styling(bootstrap_options = "striped", full_width = T)%>%
+  kable_styling(bootstrap_options = "striped", font_size = 11)
+
+```
+
+# Hagenbach-Bischoff
+
+mit 26 Sitzen
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+data <- read.csv(file = "HB.csv", sep = ";")
+
+a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/27) %>%
+  mutate(Sitzzahl_V1 = floor(Stimmen/((sum(data$Stimmen)/27)+1))) %>%
+  mutate(Quotient = Stimmen/(Sitzzahl_V1+1)) %>%
+  mutate(Sitzzahl_V2 = Sitzzahl_V1) 
+
+a$Sitzzahl_V2[which.max(a$Quotient)]  <- a$Sitzzahl_V2[which.max(a$Quotient)]+1
+
+a %>%
+kbl() %>%
+  kable_styling(full_width = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
+  kable_styling(bootstrap_options = "striped", full_width = F)%>%
+  kable_styling(bootstrap_options = "striped", font_size = 11, position = "left")
+
+```
+
+mit 27 Sitzen
+ 
+```{r, include=T, echo=F, warning=F,results='asis'}
+data <- read.csv(file = "HB.csv", sep = ";")
+
+a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/28) %>%
+  mutate(Sitzzahl_V1 = floor(Stimmen/((sum(data$Stimmen)/28)+1))) %>%
+  mutate(Quotient = Stimmen/(Sitzzahl_V1+1)) %>%
+  mutate(Sitzzahl_V2 = Sitzzahl_V1) 
+
+a$Sitzzahl_V2[which.max(a$Quotient)]  <- a$Sitzzahl_V2[which.max(a$Quotient)]+1
+
+a %>%
+kbl() %>%
+  kable_styling(full_width = T) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
+  kable_styling(bootstrap_options = "striped", full_width = F)%>%
+  kable_styling(bootstrap_options = "striped", font_size = 11, position = "left")
+
+```
+
+
+###### welche medien konsumieren
+
+
+# Nun: Fokus offiziele Daten durch den Kanton
+
+Zunächst: Scrapen wir die Daten...
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+
+# source("/Users/mathisschnell/Desktop/SP/Data/SP_Analysen/1_scraper.R")
+
+```
+
+# Anschliessend: Daten aufbereiten
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+  
+# source("3_2014")
+# source("2_2018.R")
+# source("4_varia.R")
+
+```
+
+Analyse:
+
+```{r, include=T, echo=F, warning=F,results='asis'}
+  
+d1 <- data_grw_agg[,c(2,3,10)] %>%
+  group_by(year, gemeinde) %>%
+  summarize(Prozent= sum(Prozent))
+  
+d2 <- data_grw_agg[,c(2,3,11)] %>%
+  group_by(year, gemeinde)  %>%
+  summarize(beteiligung = mean(beteiligung))
+
+
+d3 <- merge(d1, d2, by = c("year", "gemeinde"))
+
+d3$ratio <- (d3$Prozent/100)*(d3$beteiligung/100)
+
+d3 %>% kbl()
+
+```
+sscshnitt: 33.93
+
+Wo links gut und beteiligung tief?
+
+####### wo war es knapp?
+
+######  Beteilliigung
+
+fokus agglo
+
+# scraper
+
+source("/Users/mathisschnell/Desktop/Masterarbeit_R/r/Google_Trends.R")
+
+
+
+fokus:
+SP gut, beteiligung tief
+SP gut, beteiligung hoch
+Land, Agglo, Stadt/region
+Wer folgt covid?
+kultur etc.
+Wie zürich (Zukunftswurf für die Stadt)
+fokuss ratio zunahme GLP mit abnahme SP/GRüne
