@@ -8,6 +8,7 @@ library(pdftools)
 library(data.table)
 library(dplyr)
 
+
 # get gemeindenummer
 
 gemeinden <- read_excel("gemeinden.xlsx")
@@ -50,4 +51,5 @@ for(i in numbers$GDENR) {
 # test
 
 
+# varia
 
