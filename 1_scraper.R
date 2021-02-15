@@ -54,8 +54,4 @@ for(i in numbers$GDENR) {
 # test
 
 
-<<<<<<< HEAD
-# varia
-=======
->>>>>>> e80cf58ecee6a77853d964104971ebd6c4660c36
-
+# variajkh
