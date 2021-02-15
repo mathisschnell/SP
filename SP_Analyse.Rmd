@@ -13,6 +13,7 @@ bibliography: references.bib
 ```{r setup, include=FALSE}
 # Vorbereitungen
 set.seed(123)
+options(digits=3)
 rm(list = ls())
 library(haven)
 library(dplyr)
@@ -20,6 +21,8 @@ library(tidyverse)
 library(foreign)
 library(readstata13)
 library(kableExtra)
+library(DT)
+
 ```
 
 # Einsichten Nationalratswahlen 2015/2019
@@ -35,7 +38,7 @@ library(kableExtra)
 data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
 
 data %>% 
-  filter(canton_sample == "BE" | canton_sample == "AG") %>% 
+  filter(canton_sample == "BE" | canton_sample == "AG" | canton_sample == "ZH" ) %>% 
   filter(f10300rec == "SP/PS - Social Democratic Party" | f10300rec == "GPS/PES - Green Party" | f10300rec == "PdA/PdT-Party of Labour / AL-Alternative List / Sol-Solidari") %>%  # SP, Grüne, PDA
   filter(f11800rec == "GLP/PVL - Green Liberal Party") %>%
   select(f12700c, f12720rec,f12730c, f12740rec) %>%
@@ -58,11 +61,7 @@ data %>%
                     "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
                     	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
                     "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
-  kbl(col.names = c("MIP 1", "Kompetenzz 1", "MIP 2", "Kompetenz 2")) %>%
-  kable_styling(full_width = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
-  kable_styling(bootstrap_options = "striped", full_width = T)%>%
-  kable_styling(bootstrap_options = "striped", font_size = 11)
+datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
 
 ```
 
@@ -97,17 +96,14 @@ data %>%
                     "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
                     "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
   mutate_all(linebreak) %>%
-  kbl(col.names = c("MIP 1", "Kompetenzt 1", "MIP 2", "Kompetenz 2")) %>%
-  kable_styling(full_width = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
-  kable_styling(bootstrap_options = "striped", full_width = T)%>%
-  kable_styling(bootstrap_options = "striped", font_size = 11)
+datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
 
 ```
 
 # Sympaisanten: 2019 keine Partizipation, jedoch ideologische Nähe zu Rot/Gruen
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
+
 data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
 
 data %>% 
@@ -135,19 +131,14 @@ data %>%
                     "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
                     "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
   mutate_all(linebreak) %>%
-  kbl(col.names = c("MIP 1", "Kompetenzt 1", "MIP 2", "Kompetenz 2")) %>%
-  kable_styling(full_width = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
-  kable_styling(bootstrap_options = "striped", full_width = T)%>%
-  kable_styling(bootstrap_options = "striped", font_size = 11)
+datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
 
 ```
 
-# Hagenbach-Bischoff
-
-mit 26 Sitzen
+# Hagenbach-Bischoff, 26 Sitzen
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
+
 data <- read.csv(file = "HB.csv", sep = ";")
 
 a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/27) %>%
@@ -157,18 +148,17 @@ a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/27) %>%
 
 a$Sitzzahl_V2[which.max(a$Quotient)]  <- a$Sitzzahl_V2[which.max(a$Quotient)]+1
 
-a %>%
-kbl() %>%
-  kable_styling(full_width = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
-  kable_styling(bootstrap_options = "striped", full_width = F)%>%
-  kable_styling(bootstrap_options = "striped", font_size = 11, position = "left")
+a %>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
+                             "Quotient", "Sitzzahl V2"),
+  caption = "Verteilung Hagenbach Bischoff, 26 Sitze")
+
 
 ```
 
-mit 27 Sitzen
+# Hagenbach-Bischoff, 27 Sitzen
  
 ```{r, include=T, echo=F, warning=F,results='asis'}
+
 data <- read.csv(file = "HB.csv", sep = ";")
 
 a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/28) %>%
@@ -178,18 +168,14 @@ a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/28) %>%
 
 a$Sitzzahl_V2[which.max(a$Quotient)]  <- a$Sitzzahl_V2[which.max(a$Quotient)]+1
 
-a %>%
-kbl() %>%
-  kable_styling(full_width = T) %>%
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))%>%
-  kable_styling(bootstrap_options = "striped", full_width = F)%>%
-  kable_styling(bootstrap_options = "striped", font_size = 11, position = "left")
+
+a %>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
+                             "Quotient", "Sitzzahl V2"),
+  caption = "Verteilung Hagenbach Bischoff, 27 Sitze")
 
 ```
 
-
 ###### welche medien konsumieren
-
 
 # Nun: Fokus offiziele Daten durch den Kanton
 
@@ -215,6 +201,9 @@ Analyse:
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
   
+data_grw_agg <- readRDS(file = "data_grw_final.rds")
+data_grw_agg$year
+
 d1 <- data_grw_agg[,c(2,3,10)] %>%
   group_by(year, gemeinde) %>%
   summarize(Prozent= sum(Prozent))
@@ -223,29 +212,34 @@ d2 <- data_grw_agg[,c(2,3,11)] %>%
   group_by(year, gemeinde)  %>%
   summarize(beteiligung = mean(beteiligung))
 
-
 d3 <- merge(d1, d2, by = c("year", "gemeinde"))
 
-d3$ratio <- (d3$Prozent/100)*(d3$beteiligung/100)
+d3$ratiox100 <- (((d3$Prozent/100)*(d3$beteiligung/100)))*100
 
-d3 %>% kbl()
+d3 %>% datatable(colnames = c("Jahr", "Gemeinde", "Anteil RG", "Beteiligung", "Ratio"))
 
 ```
-sscshnitt: 33.93
 
-Wo links gut und beteiligung tief?
+Vereinfacht vier Optionen
+
+- Links gut, Beteiligung tief, Ratio = tief
+- Links gut, Beteiligung gut, Ratio = hoch
+
+- Links tief, Beteiligung tief, Ratio = tief
+- Links tief, Beteiligung gut, Ratio = hoch
+
+Wo links gut und die beteiligung tief?
+- Biel, Nidau, ...
+
+--> GGF hier intensivieren
 
 ####### wo war es knapp?
 
-######  Beteilliigung
+######  Beteilligung
 
 fokus agglo
 
-# scraper
-
-source("/Users/mathisschnell/Desktop/Masterarbeit_R/r/Google_Trends.R")
-
-
+Wo ist GlP stark?
 
 fokus:
 SP gut, beteiligung tief
@@ -255,3 +249,29 @@ Wer folgt covid?
 kultur etc.
 Wie zürich (Zukunftswurf für die Stadt)
 fokuss ratio zunahme GLP mit abnahme SP/GRüne
+
+
+
+# Vorschläge/Inspiration
+
+https://gruenezuerich.ch/gruenstadt-ja
+Ausländerstimmrecht
+GratiséV
+Fussgängerstadt
+
+# Etwas science-po Einsichten
+
+- The electoral appeal of party strategies in post-industrial societies: when can the Mainstream Left succeed? Tarik Abou-Chadi, Markus Wagner
+
+- Electoral fortunes of social democratic parties: do second dimension positions matter?
+Tarik Abou-Chadi & Markus Wagner
+
+Gibt auch Literatur, wie Liste ausgestaltet werden sollte - halte ich aber nicht für angezeigt
+
+
+
+https://fokus.ag/analysen/bericht_2020-10-18_grossrat/
+
+
+Nicht representativ, aber erstwähler haben im Aargau überproportional RG gewählt
+https://fokus.ag/FOKUS_Aargau_Bericht_Grossratswahl_2020-10-18.pdf

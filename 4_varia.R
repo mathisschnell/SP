@@ -8,8 +8,9 @@ new <- readRDS(file = "Results18.rds")
 new$year <- as.factor("2018")
 
 data_grw <- rbind(old, new)
-saveRDS(data_grw, "data_grw.rds")
 
+saveRDS(data_grw, "data_grw.rds")
+data_grw <- readRDS(file = "data_grw.rds")
 data_grw$wahlzettel <- as.numeric(gsub("'","" , data_grw$wahlzettel ,ignore.case = TRUE))
 data_grw$ungultig <- as.numeric(gsub("'","" , data_grw$ungultig ,ignore.case = TRUE))
 data_grw$wahlberechtigte <- as.numeric(gsub("'","" , data_grw$wahlberechtigte ,ignore.case = TRUE))
@@ -32,6 +33,10 @@ data_grw <- data_grw %>%
 
 saveRDS(data_grw, "data_grw_final.rds")
 
+
+
+
+
 ################ Datensatz aggregieren nach Jahr, Liiste und Gemeiinde
 
 data_grw_agg <- data_grw %>%
@@ -45,16 +50,17 @@ for(i in 4:11){
 for(i in 1:3){
   data_grw_agg[,i]<-as.factor(as.character(data_grw_agg[,i]))
 }
-levels(data_grw_agg$Partei)
 
 RG <- c("Grune Biel / Verts Bienne","Grune Seeland / Verts Seeland" , 
         "JUSO JS", "PdA/POP", "PSR" , "SP Frauen", "SP-Munner")
+
+
+
 
 data_grw_agg <- data_grw_agg %>%
   group_by(Partei, year, gemeinde) %>% 
   summarise_each(funs(mean)) %>%
   filter(Partei %in% RG) 
-  
 
 data_grw_agg[,c(2:10)] %>%
   group_by(year, gemeinde) %>% 
