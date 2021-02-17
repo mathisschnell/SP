@@ -1,15 +1,30 @@
 ---
-title: "SP Analyse"
+title: "Datenanalyse SP GRW 2022"
 author: "Mathis Schnell"
 date: "25 1 2021"
 output:
-  html_document:
-    df_print: paged
-  pdf_document: default
+  ioslides_presentation: default
+  beamer_presentation: default
+  slidy_presentation: default
+header-includes:
+- \newcommand{\bcenter}{\begin{center}}
+- \newcommand{\ecenter}{\end{center}}
+bibliography: ref_SP.bib
 ---
-Bitte nicht verbreitens
+<style type="text/css">
 
-bibliography: references.bib
+h2 {
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+}
+</style>
+
+## Bitte nicht verbreiten !
+
 ```{r setup, include=FALSE}
 # Vorbereitungen
 set.seed(123)
@@ -22,19 +37,20 @@ library(foreign)
 library(readstata13)
 library(kableExtra)
 library(DT)
+library(genderizeR)
+library(readxl)
 
 ```
 
 # Einsichten Nationalratswahlen 2015/2019
 
-### Die zwei wichtigsten politischen Probleme - und wer ist am Kompetenztesten?
+### In der Folge: Für mehrere Gruppen die zwei wichtigsten Probleme sowie die als kompetenteste wahrgenommene Partei. 
 
 (data: Selects 2019 - please do not share...)
 
 # Wechsewähler: Von Rot/Grün (2015) nach GLP (2019)
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
-
 data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
 
 data %>% 
@@ -100,7 +116,7 @@ datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
 
 ```
 
-# Sympaisanten: 2019 keine Partizipation, jedoch ideologische Nähe zu Rot/Gruen
+# Sympaisanten: 2019 keine Partizipation, jedoch ideologische Nähe zu Rot/Grün
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
 
@@ -177,12 +193,11 @@ a %>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
 
 ###### welche medien konsumieren
 
-# Nun: Fokus offiziele Daten durch den Kanton
+#Daten durch den Kanton
 
-Zunächst: Scrapen wir die Daten...
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
-
+# Zunächst: Scrapen wir die Daten...
 # source("/Users/mathisschnell/Desktop/SP/Data/SP_Analysen/1_scraper.R")
 
 ```
@@ -199,10 +214,10 @@ Zunächst: Scrapen wir die Daten...
 
 Analyse:
 
-```{r, include=T, echo=F, warning=F,results='asis'}
+```{r, include=T, echo=F, warning=F,results='asis', message = FALSE}
   
 data_grw_agg <- readRDS(file = "data_grw_final.rds")
-data_grw_agg$year
+
 
 d1 <- data_grw_agg[,c(2,3,10)] %>%
   group_by(year, gemeinde) %>%
@@ -249,6 +264,8 @@ Wer folgt covid?
 kultur etc.
 Wie zürich (Zukunftswurf für die Stadt)
 fokuss ratio zunahme GLP mit abnahme SP/GRüne
+
+Wo hat Rot in den letzten Jahren stark verrlooren?
 
 
 

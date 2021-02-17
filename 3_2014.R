@@ -49,7 +49,7 @@ for(m in gnr){
       container[j,] <- if(te[which(te$pa == i)[2] + (5+j),1] == j){
         te[which(te$pa == i)[2] + (5+j),]
       } else {
-        rep(NA, 8)
+        rep(NA, 9)
       }
       
     }
@@ -79,14 +79,14 @@ for(m in gnr){
   
   
   
-  ####### spezialfall SD &  (länge der Liste....)
+  ####### spezialfall SD (länge der Liste....)
   
 
     ##### Gemeindedaten
     container <- data.frame(matrix(nrow = 10, ncol = 8))
     
     
-    container[1,] <- te[which(te$pa == i)[2] + (6),]
+    container[1,] <- te[which(te$pa == Parteien[16])[2] + (6),]
     
     container$gemeinde <- str_remove(te[3,2], "Gemeinde/Commune: ")
     container$wahlberechtigte <- te[26,2]
@@ -97,14 +97,14 @@ for(m in gnr){
     container$beteiligung <- te[31,2]
     
     ##### Listendaten
-    container$Listenstimmen <- te[te$pa %in% c(i), ][1,3]
-    container$Prozent <- te[te$pa %in% c(i), ][1,4]
-    container$Kandidatenstimmen  <- te$pa[(which(te$pa == i)[2]+1)]
-    container$Zusatzstimmen <- te$pa[(which(te$pa == i)[2]+2)]
-    container$Parteistimmen <- te$pa[(which(te$pa == i)[2]+3)]
-    container$Partei <- i
+    container$Listenstimmen <- te[te$pa %in% c(Parteien[16]), ][1,3]
+    container$Prozent <- te[te$pa %in% c(Parteien[16]), ][1,4]
+    container$Kandidatenstimmen  <- te$pa[(which(te$pa == Parteien[16])[2]+1)]
+    container$Zusatzstimmen <- te$pa[(which(te$pa == Parteien[16])[2]+2)]
+    container$Parteistimmen <- te$pa[(which(te$pa == Parteien[16])[2]+3)]
+    container$Partei <- Parteien[16]
     
-    assign(paste("container",i, sep="_"), container)
+    assign(paste("container",Parteien[16], sep="_"), container)
     
 
   
@@ -154,11 +154,11 @@ for(i in 2:length(temp)){
   print(i)
   data <- rbind(data, prov)
   
-  
+  w
 }
 
 data$Jahr <- "2014"
 
 saveRDS(data, "Results14.rds")
-
+d <- readRDS("Results14.rds")
 

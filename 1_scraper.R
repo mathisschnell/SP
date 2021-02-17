@@ -8,10 +8,7 @@ library(pdftools)
 library(data.table)
 library(dplyr)
 
-<<<<<<< HEAD
 
-=======
->>>>>>> e80cf58ecee6a77853d964104971ebd6c4660c36
 # get gemeindenummer
 
 gemeinden <- read_excel("gemeinden.xlsx")
@@ -21,6 +18,18 @@ gemeinden <- read_excel("gemeinden.xlsx")
 numbers <- gemeinden %>%
   filter(GDEBZNA == "Verwaltungskreis Biel/Bienne" | GDEBZNA == "Verwaltungskreis Seeland") %>%
   select(GDENR)
+
+
+# 2010
+for(i in numbers$GDENR) {
+  
+  browseURL(paste("https://www.wahlarchiv.sites.be.ch/wahlen2010/documents/growa/waehleranteileGemeinde",
+                  i,
+                  ".csv", sep =""),
+            browser = getOption("browser"),
+            encodeIfNeeded = TRUE)
+  
+}
 
 
 # 2014 (eine gemeinde fehlt --> Büren & Meienried wurden zusammengefasst)
@@ -46,6 +55,9 @@ for(i in numbers$GDENR) {
             encodeIfNeeded = TRUE)
   
 }
+
+
+
 
 
 
