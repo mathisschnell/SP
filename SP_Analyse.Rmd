@@ -3,9 +3,8 @@ title: "Datenanalyse SP GRW 2022"
 author: "Mathis Schnell"
 date: "25 1 2021"
 output:
-  ioslides_presentation: default
-  beamer_presentation: default
-  slidy_presentation: default
+  html_document:
+    df_print: paged
 header-includes:
 - \newcommand{\bcenter}{\begin{center}}
 - \newcommand{\ecenter}{\end{center}}
@@ -231,7 +230,7 @@ d3 <- merge(d1, d2, by = c("year", "gemeinde"))
 
 d3$ratiox100 <- (((d3$Prozent/100)*(d3$beteiligung/100)))*100
 
-d3 %>% datatable(colnames = c("Jahr", "Gemeinde", "Anteil RG", "Beteiligung", "Ratio"))
+d3 %>% datatable(colnames = c("Jahr", "Gemeinde", "Anteil RG", "Beteiligung", "Ratio"), options = list(ordering = TRUE))
 
 ```
 
