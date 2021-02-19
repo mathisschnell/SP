@@ -10,19 +10,8 @@ header-includes:
 - \newcommand{\ecenter}{\end{center}}
 bibliography: ref_SP.bib
 ---
-<style type="text/css">
 
-h2 {
-  text-align: center;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-}
-</style>
-
-## Bitte nicht verbreiten !
+# Bitte nicht verbreiten !
 
 ```{r setup, include=FALSE}
 # Vorbereitungen
@@ -43,11 +32,9 @@ library(readxl)
 
 # Einsichten Nationalratswahlen 2015/2019
 
-### In der Folge: Für mehrere Gruppen die zwei wichtigsten Probleme sowie die als kompetenteste wahrgenommene Partei. 
+Was waren die zwei wichtigsten Probleme und welche Partei ist auf diesem Feld die kompetenteste? Könnte u.U. als Denkhilfe für die Themensetzung genutzt werden. 
 
-(data: Selects 2019 - please do not share...)
-
-# Wechsewähler: Von Rot/Grün (2015) nach GLP (2019)
+## Wechsewähler: Von Rot/Grün (2015) nach GLP (2019)
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
 data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
@@ -76,12 +63,15 @@ data %>%
                     "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
                     	"CVP/PDC - Christian Democratic People’s Party" = "CVP/PDC",
                     "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
-datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
+datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'),
+  class = 'cell-border stripe', 
+  rownames = FALSE) 
+
 
 ```
 
-# "Abspinger": 2015 Rot/Grün, 2019 keine Partizipation
-
+## "Abspinger": 2015 Rot/Grün, 2019 keine Partizipation
+\n
 ```{r, include=T, echo=F, warning=F,results='asis'}
 
 data <- read.dta13("1179_Selects2019_PES_Data_v1.0.0.dta", convert.factors = T)
@@ -111,11 +101,14 @@ data %>%
                     "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
                     "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
   mutate_all(linebreak) %>%
-datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
+datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'),
+class = 'cell-border stripe', 
+  rownames = FALSE) 
+
 
 ```
 
-# Sympaisanten: 2019 keine Partizipation, jedoch ideologische Nähe zu Rot/Grün
+## Sympaisanten: 2019 keine Partizipation, jedoch ideologische Nähe zu Rot/Grün
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
 
@@ -146,11 +139,16 @@ data %>%
                     "FDP/PLR - Liberal Radical Party" = "PLR/FDP",
                     "EVP/PEV - Evangelical People’s Party" = "EVP/PEV")) %>%
   mutate_all(linebreak) %>%
-datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'))
+datatable(colnames = c('Problem 1', 'Competence', 'Problem 2', 'Competence'),
+  class = 'cell-border stripe', 
+  rownames = FALSE) 
+
 
 ```
 
-# Hagenbach-Bischoff, 26 Sitzen
+# Resultate 2018 (Hagenbach-Bischoff)
+
+## 26 Sitze
 
 ```{r, include=T, echo=F, warning=F,results='asis'}
 
@@ -163,14 +161,17 @@ a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/27) %>%
 
 a$Sitzzahl_V2[which.max(a$Quotient)]  <- a$Sitzzahl_V2[which.max(a$Quotient)]+1
 
-a %>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
+a %>%
+  rbind(c("",sum(a$Stimmen),0, sum(a$Sitzzahl_V1), 0, sum(a$Sitzzahl_V2)))%>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
                              "Quotient", "Sitzzahl V2"),
-  caption = "Verteilung Hagenbach Bischoff, 26 Sitze")
+  caption = "Verteilung Hagenbach Bischoff, 26 Sitze",
+  class = 'cell-border stripe', 
+  rownames = FALSE) 
 
 
 ```
 
-# Hagenbach-Bischoff, 27 Sitzen
+## 27 Sitze
  
 ```{r, include=T, echo=F, warning=F,results='asis'}
 
@@ -183,12 +184,16 @@ a <- data %>% mutate(Verteilzahl = sum(data$Stimmen)/28) %>%
 
 a$Sitzzahl_V2[which.max(a$Quotient)]  <- a$Sitzzahl_V2[which.max(a$Quotient)]+1
 
-
-a %>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
+a$Stimmen
+a %>%
+  rbind(c("",sum(a$Stimmen),0, sum(a$Sitzzahl_V1), 0, sum(a$Sitzzahl_V2)))%>% datatable(colnames = c('Liste', 'Stimmen', 'Verteilzahl', 'Sitzzahl V1',
                              "Quotient", "Sitzzahl V2"),
-  caption = "Verteilung Hagenbach Bischoff, 27 Sitze")
+  caption = "Verteilung Hagenbach Bischoff, 27 Sitze",
+  class = 'cell-border stripe', 
+  rownames = FALSE) 
 
 ```
+--> M.E. würde dieser Sitz an die SVP gehen.
 
 ###### welche medien konsumieren
 
@@ -230,7 +235,9 @@ d3 <- merge(d1, d2, by = c("year", "gemeinde"))
 
 d3$ratiox100 <- (((d3$Prozent/100)*(d3$beteiligung/100)))*100
 
-d3 %>% datatable(colnames = c("Jahr", "Gemeinde", "Anteil RG", "Beteiligung", "Ratio"), options = list(ordering = TRUE))
+d3 %>% datatable(colnames = c("Jahr", "Gemeinde", "Anteil RG", "Beteiligung", "Ratio"), options = list(ordering = TRUE),
+  class = 'cell-border stripe', 
+  rownames = FALSE) 
 
 ```
 
@@ -244,6 +251,9 @@ Vereinfacht vier Optionen
 
 Wo links gut und die beteiligung tief?
 - Biel, Nidau, ...
+
+
+Untersschied Männder/Frauen nach Gemeinden
 
 --> GGF hier intensivieren
 
@@ -267,6 +277,7 @@ fokuss ratio zunahme GLP mit abnahme SP/GRüne
 Wo hat Rot in den letzten Jahren stark verrlooren?
 
 
+Kandidatenstimmen/Listenstimmen
 
 # Vorschläge/Inspiration
 
@@ -291,3 +302,5 @@ https://fokus.ag/analysen/bericht_2020-10-18_grossrat/
 
 Nicht representativ, aber erstwähler haben im Aargau überproportional RG gewählt
 https://fokus.ag/FOKUS_Aargau_Bericht_Grossratswahl_2020-10-18.pdf
+
+
